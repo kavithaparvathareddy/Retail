@@ -15,16 +15,10 @@ public class CustomersPOM{
 		this.driver = driver; 
 		PageFactory.initElements(driver, this);
 	}
+	
+	//*************Customer WebElements****************
 
-	@FindBy(id="input-username")
-	private WebElement userName; 
-
-	@FindBy(id="input-password")
-	private WebElement password;
-
-	@FindBy(xpath="//button[@type='submit']")
-	private WebElement loginBtn;
-
+	
 	//navigating to customers menu
 	@FindBy(xpath="//i[@class='fa fa-user fw']")
 	private WebElement cartIcon;
@@ -41,20 +35,63 @@ public class CustomersPOM{
 
 	@FindBy(id="input-email")
 	private WebElement customerEmail;
-
-	public void sendUserName(String userName) {
-		this.userName.clear();
-		this.userName.sendKeys(userName);
+	
+	//*************Customer Reward PointsWebElements****************
+	
+	
+	@FindBy(xpath="//table/tbody/tr[td[contains(text(),'kavitha p')]]/td[input[@type='checkbox']]")
+	private WebElement editcustomerToAddRewardCheckBox;
+	
+	@FindBy(xpath="//table/tbody/tr[td[contains(text(),'kavitha p')]]/td/a[@data-original-title='Edit']")
+	private WebElement editcustomerToAddRewardEditClick;
+	
+	@FindBy(xpath="//input[@id='input-firstname']")
+	private WebElement editCustomerFirstName;
+	
+	@FindBy(xpath="//a[contains(text(),'Address 1')]")
+	private WebElement editCustomerAddress1;
+		
+	@FindBy(xpath="//input[@id='input-postcode1']")
+	private WebElement editCustomerPostalCode;
+	
+	@FindBy(xpath="//a[@href='#tab-reward']")
+	private WebElement editRewardPointsLink;
+	
+	@FindBy(xpath="//input[@id='input-reward-description']")
+	private WebElement editDescription;
+	
+	@FindBy(xpath="//input[@id='input-points']")
+	private WebElement editRewardPoints;
+	
+	@FindBy(xpath="//button[@id='button-reward']")
+	private WebElement AddRewardPoints;
+	
+	@FindBy(xpath="//button[@type='submit']")
+	public WebElement saveButton;
+		
+	
+	
+	//*************Customer Reward PointsMethods****************
+	
+	public void EditCustomerDetails() {
+		this.editcustomerToAddRewardCheckBox.click();
+		this.editcustomerToAddRewardEditClick.click();
+		this.editCustomerFirstName.clear();
+		this.editCustomerFirstName.sendKeys("kavitha");
+		this.editCustomerAddress1.click();
+		this.editCustomerPostalCode.sendKeys("500072");
+		this.editRewardPointsLink.click();
+		this.editDescription.sendKeys("Exclusive Shopping");
+		this.editRewardPoints.sendKeys("100");
+		this.AddRewardPoints.click();
+		//this.saveButton.click();
+		
 	}
-
-	public void sendPassword(String password) {
-		this.password.clear(); 
-		this.password.sendKeys(password); 
-	}
-
-	public void clickLoginBtn() {
-		this.loginBtn.click(); 
-	}
+	
+	
+	//*************CustomerDetails Methods****************
+	
+	
 
 	public void showCustomersList() {
 		Actions action = new Actions(driver);
@@ -73,10 +110,10 @@ public class CustomersPOM{
 		this.customerEmail.sendKeys(customerEmail);
 		this.filterButton.click();
 	}
+	
 
 	public void ClearScreen()
 	{
-		// Write the code to clear all textboxes
 		this.customerName.clear();
 	}
 

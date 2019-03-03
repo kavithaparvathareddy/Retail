@@ -12,21 +12,21 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.training.generics.ScreenShot;
-import com.training.pom.ReturnsPOM;
+import com.training.pom.AdminLoginPOM;
+import com.training.pom.OrdersPOM;
 import com.training.utility.DriverFactory;
 import com.training.utility.DriverNames;
 
-public class DeleteProductReturnTests {
+public class TC17DeleteOrderDetailsTests {
 
 	private WebDriver driver;
 	private String baseUrl;
 	private String mainUrl;
-	private ReturnsPOM returnsPOM;
+	private AdminLoginPOM adminloginPOM;
+	private OrdersPOM ordersPOM;
 	private static Properties properties;
-	private ScreenShot screenShot;
-
-	//Initializing Driver
+		
+	//Driver Initialization details
 	@BeforeClass
 	public  void setUpBeforeClass() throws IOException, InterruptedException {
 		properties = new Properties();
@@ -37,36 +37,35 @@ public class DeleteProductReturnTests {
 		// open the browser 
 		driver.get(mainUrl);
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		returnsPOM = new ReturnsPOM(driver);
+		adminloginPOM = new AdminLoginPOM(driver);
+		ordersPOM = new OrdersPOM(driver);
 	}
-
 
 	@Test(priority = 1)
-	public void showReturnsTest() throws InterruptedException {
-		returnsPOM.sendUserName("Admin");
-		returnsPOM.sendPassword("admin@123");
-		returnsPOM.clickLoginBtn();
-		// Show all returns
-		returnsPOM.showReturns();
+	public void showOrders() throws InterruptedException {
+		adminloginPOM.sendUserName("Admin");
+		adminloginPOM.sendPassword("admin@123");
+		adminloginPOM.clickLoginBtn();
+		// Show all orders
+		ordersPOM.showOrdersList();
 
 	}
-	// deleting the selected return
+     //delete orders and alert message functionality
 	@Test(priority = 2)
-	public void deleteWithReturnID() throws InterruptedException {
-		String expectedReturnID = "22"; 
-		returnsPOM.deleteSelectedItem(expectedReturnID);
-
+	public void deleteWithOrderID() throws InterruptedException {
+		String expectedOrderID = "175";
+		ordersPOM.deleteSelectedItem(expectedOrderID);
 		String actualMessage =driver.findElement(By.xpath("//div[@class='alert alert-success']")).getText();
 		String expectedMessage="Success";
 		Assert.assertTrue(actualMessage.contains(expectedMessage));
 		boolean expectedDeletedSucessfully= true;
-		boolean actualDeletedSucessfully = driver.findElements(By.xpath("//table/tbody/tr[td[2][contains(text(), '" + expectedReturnID + "')]]/td[1]")).size() == 0;
-		Assert.assertEquals(actualDeletedSucessfully , expectedDeletedSucessfully);
-
+		boolean actualDeletedSucessfully = driver.findElements(By.xpath("//table/tbody/tr[td[2][contains(text(),'" + expectedOrderID + "')]]/td[1]")).size() == 0;
+		Assert.assertEquals(actualDeletedSucessfully,expectedDeletedSucessfully);
+		ordersPOM.showOrdersById(expectedOrderID);
 	}
 	@AfterClass
 	public void tearDown() throws Exception {
-		Thread.sleep(1000);
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.quit();
 	}
 }

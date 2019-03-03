@@ -1,5 +1,7 @@
 package com.training.pom;
 
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,15 +18,7 @@ public class ReturnsPOM {
 		PageFactory.initElements(driver, this);
 	}
 
-	@FindBy(id="input-username")
-	private WebElement userName; 
-
-	@FindBy(id="input-password")
-	private WebElement password;
-
-	@FindBy(xpath="//button[@type='submit']")
-	private WebElement loginBtn;
-
+	
 	//Moving mouse to Returns link
 	@FindBy(xpath="//i[@class='fa fa-shopping-cart fw']")
 	private WebElement cartIcon;
@@ -46,20 +40,46 @@ public class ReturnsPOM {
 	@FindBy(xpath="//i[@class='fa fa-trash-o']")
 	private WebElement deleteButton;
 
-	public void sendUserName(String userName) {
-		this.userName.clear();
-		this.userName.sendKeys(userName);
-	}
+	
+	
+	//************DeleteReturn WebElements**********
+	
+	@FindBy(xpath="//i[@class='fa fa-plus']")
+	private WebElement addReturn;
+	
+	@FindBy(xpath="//input[@id='input-order-id']")
+	private WebElement productReturnOrderID;
+	
+	@FindBy(xpath="//input[@id='input-customer']")
+	private WebElement productReturnCustomerName;
+	
+	
+	@FindBy(xpath="//input[@placeholder='First Name']")
+	private WebElement productReturnFirstName;
+	
+	@FindBy(xpath="//input[@id='input-lastname']")
+	private WebElement productReturnLastName;
+	
+	@FindBy(xpath="//input[@id='input-email']")
+	private WebElement productReturnEmail;
+	
+	@FindBy(xpath="//input[@placeholder='Telephone']")
+	private WebElement productReturnTelephone;
+	
+	@FindBy(xpath="//input[@id='input-product']")
+	private WebElement productReturnProductName;
+	
+	@FindBy(xpath="//input[@id='input-model']")
+	private WebElement productReturnProductModel;
 
-	public void sendPassword(String password) {
-		this.password.clear(); 
-		this.password.sendKeys(password); 
-	}
-
-	public void clickLoginBtn() {
-		this.loginBtn.click(); 
-	}
-
+	@FindBy(xpath="//button[@type='submit']")
+	private WebElement productReturnSaveButton;
+	
+	@FindBy(xpath="/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/div[2]/form[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]")
+	private WebElement productReturnCheckBox;
+	
+	
+	//********** Filter Product return Methods*******************
 	//Show list of all return details
 	public void showReturns() {
 		Actions action = new Actions(driver);
@@ -78,6 +98,7 @@ public class ReturnsPOM {
 		this.customerName.sendKeys(customerName);
 		this.filterButton.click();
 	}
+	//****************Delete Product Return Method*************
 	// Check box selection
 	public void selectReturnById(String returnID) {
 		showReturnsById(returnID);
@@ -87,17 +108,39 @@ public class ReturnsPOM {
 	public void deleteSelectedItem(String returnID) throws InterruptedException
 	{
 		selectReturnById(returnID);
-		Thread.sleep(2000);
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		this.deleteButton.click();
 		driver.switchTo().alert().accept();
 	}
 
+		//Clear functionality
 	public void ClearScreen()
 	{
-		// Write the code to clear all textboxes
 		this.returnId.clear();
 	}
-
+	
+	//************ADD and DeleteReturn Methods**********
+	
+	//Add customer details of returned product
+	public void addProductReturndetails() {
+	this.addReturn.click();
+	this.productReturnOrderID.sendKeys("105");
+	this.productReturnCustomerName.sendKeys("kavitha");
+	this.productReturnFirstName.sendKeys("sooman");
+	this.productReturnLastName.sendKeys("bose");
+	this.productReturnEmail.sendKeys("sbose@abc.com");
+	this.productReturnTelephone.sendKeys("9986577899");
+	this.productReturnProductName.sendKeys("Integer vitae iaculis massa");
+	this.productReturnProductModel.sendKeys("SKU-003");
+	this.productReturnSaveButton.click();
+	}
+	//deleting the returned prouct
+	public void deleteProductReturnDetails(String productReturnOrderID) throws InterruptedException
+	{
+		this.productReturnCheckBox.click();
+		this.deleteButton.click();
+		driver.switchTo().alert().accept();
+	}
 }
 
 

@@ -16,20 +16,22 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.training.generics.ScreenShot;
+import com.training.pom.AdminLoginPOM;
 import com.training.pom.ReturnsPOM;
-import com.training.pom.LoginPOM;
 import com.training.utility.DriverFactory;
 import com.training.utility.DriverNames;
 
-public class FilterProductReturnTests {
+public class TC49AddAndDeleteReturnProductTests {
 
 	private WebDriver driver;
 	private String baseUrl;
 	private String mainUrl;
+	private AdminLoginPOM adminloginPOM;
 	private ReturnsPOM returnsPOM;
 	private static Properties properties;
 	private ScreenShot screenShot;
 
+	//Driver Initialization details
 	@BeforeClass
 	public  void setUpBeforeClass() throws IOException, InterruptedException {
 		properties = new Properties();
@@ -40,42 +42,44 @@ public class FilterProductReturnTests {
 		// open the browser 
 		driver.get(mainUrl);
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
+		//Initialization of POM
+		adminloginPOM = new AdminLoginPOM(driver);
 		returnsPOM = new ReturnsPOM(driver);
 	}
-
-
+      // Logging Details
 	@Test(priority = 1)
-	public void showReturnsTest() throws InterruptedException {
-		returnsPOM.sendUserName("Admin");
-		returnsPOM.sendPassword("admin@123");
-		returnsPOM.clickLoginBtn();
-		// Show all returns
-		returnsPOM.showReturns();
+	public void Login() throws InterruptedException {
 
+		adminloginPOM.sendUserName("Admin");
+		adminloginPOM.sendPassword("admin@123");
+		adminloginPOM.clickLoginBtn();
+		 
+		
 	}
-	//Filter by Return ID
+	// returns list and adding product return details
 	@Test(priority = 2)
-	public void testWithReturnID() throws InterruptedException {
-		String expectedReturnId = "45";
-		returnsPOM.showReturnsById(expectedReturnId);
-		String actualReturnID =  driver.findElement(By.xpath("//table[@class='table table-bordered table-hover']/tbody/tr/td[2]")).getText();
-		Assert.assertEquals(expectedReturnId, actualReturnID);	
+	public void addProductReturnDetails() throws InterruptedException {
+	    returnsPOM.showReturns();
+		returnsPOM.addProductReturndetails();
+		String expectedProductReturnMessage="Success: You have modified returns!";
+		String actualProductReturnMessage=driver.findElement(By.xpath("//div[@class='alert alert-success']")).getText();
+		Assert.assertTrue(actualProductReturnMessage.contains(expectedProductReturnMessage));
 	}
-	//Filter by customer Name 
+	// deleting   returnproduct
 	@Test(priority = 3)
-	public void testWithCustomerName() throws InterruptedException {
-		String expectedCustomerName = "Shilpa";
-		returnsPOM.showReturnsByCustomerName(expectedCustomerName);
-		String actualCustomerName =driver.findElement(By.xpath("//td[contains(text(), '"+expectedCustomerName+"')]")).getText();
-		Assert.assertTrue(actualCustomerName.contains(expectedCustomerName));
+	public void deleteProductReturned() throws InterruptedException {
+		returnsPOM.deleteProductReturnDetails("100");
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		String expectedProductReturnMessage="Success: You have modified returns!";
+		String actualProductReturnMessage=driver.findElement(By.xpath("//div[@class='alert alert-success']")).getText();
+		Assert.assertTrue(actualProductReturnMessage.contains(expectedProductReturnMessage));
 	}
+      //Browser closing
 	@AfterClass
 	public void tearDown() throws Exception {
-		Thread.sleep(1000);
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.quit();
 	}
-
 }
 
 

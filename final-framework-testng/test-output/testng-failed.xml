@@ -3,13 +3,13 @@
 <suite guice-stage="DEVELOPMENT" name="Failed suite [Default suite]">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="com.training.sanity.tests.countOfOrders">
+      <class name="com.training.sanity.tests.TC46ChangeOrderDetailsTests">
         <methods>
+          <include name="editPaymentAndShipping"/>
           <include name="setUpBeforeClass"/>
-          <include name="showCountOfRows"/>
           <include name="tearDown"/>
         </methods>
-      </class> <!-- com.training.sanity.tests.countOfOrders -->
+      </class> <!-- com.training.sanity.tests.TC46ChangeOrderDetailsTests -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

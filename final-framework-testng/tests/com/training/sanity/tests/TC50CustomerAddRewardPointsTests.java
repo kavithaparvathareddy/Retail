@@ -16,15 +16,17 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.training.generics.ScreenShot;
+import com.training.pom.AdminLoginPOM;
 import com.training.pom.CustomersPOM;
 import com.training.utility.DriverFactory;
 import com.training.utility.DriverNames;
 
-public class CustomerDetailsTests{
+public class TC50CustomerAddRewardPointsTests{
 
 	private WebDriver driver;
 	private String baseUrl;
 	private String mainUrl;
+	private AdminLoginPOM adminloginPOM;
 	private CustomersPOM  customersPOM ;
 	private static Properties properties;
 	private ScreenShot screenShot;
@@ -41,44 +43,33 @@ public class CustomerDetailsTests{
 		// open the browser 
 		driver.get(mainUrl);
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
+		adminloginPOM = new AdminLoginPOM(driver);
 		customersPOM = new CustomersPOM(driver);
 	}
-	//Login into URL
+	//Login into URL and show customer list
 	@Test(priority = 1)
-	public void showCustomers() throws InterruptedException {
+	public void LoginAndCustomerList() throws InterruptedException {
 
-		customersPOM.sendUserName("Admin");
-		customersPOM.sendPassword("admin@123");
-		customersPOM.clickLoginBtn();
+		adminloginPOM.sendUserName("Admin");
+		adminloginPOM.sendPassword("admin@123");
+		adminloginPOM.clickLoginBtn();
 
 		// Show all customers
 		customersPOM.showCustomersList();
 	}
-
-	//Filtering customer with customer name
+	
+//Editing customer details by adding reward points
 	@Test(priority = 2)
 	public void testWithCustomerName() throws InterruptedException {
-		String expectedCustomerName = "kavitha";
-		customersPOM.showCustomersByName(expectedCustomerName);
-		String actualCustomerName =  driver.findElement(By.xpath("//table[@class='table table-bordered table-hover']/tbody/tr/td[2]")).getText();
-		Assert.assertTrue(actualCustomerName.contains(expectedCustomerName));	
+		customersPOM.EditCustomerDetails();
+		String expectedRewardPointMessage="Success: You have modified customers!";
+		String actualRewardPointMessage=driver.findElement(By.xpath("//div[@class='alert alert-success']")).getText();
+		Assert.assertTrue(actualRewardPointMessage.contains(expectedRewardPointMessage));
+		customersPOM.saveButton.click();
+		String expectedCustomerMessage="Success: You have modified customers!";
+		String actualCustomerMessage=driver.findElement(By.xpath("//div[@class='alert alert-success']")).getText();
+		Assert.assertTrue(actualCustomerMessage.contains(expectedCustomerMessage));
+		
+		
 	}
-
-	//Filtering customer with customer name
-	@Test(priority = 3)
-	public void testWithCustomerEmail() throws InterruptedException {
-		String expectedCustomerEmail = "kavithaparvathareddy@gmail.com";
-		customersPOM.showCustomersByEmail(expectedCustomerEmail);
-		String actualCustomerEmail =driver.findElement(By.xpath("//td[contains(text(), '"+expectedCustomerEmail+"')]")).getText();
-		Assert.assertTrue(actualCustomerEmail.contains(expectedCustomerEmail));
-	}
-
-	@AfterClass
-	public void tearDown() throws Exception {
-		Thread.sleep(1000);
-		driver.quit();
-	}
-}
-
-
+}	
